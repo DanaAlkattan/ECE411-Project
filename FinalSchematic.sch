@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.02" unitdist="inch" unit="inch" style="lines" multiple="5" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
@@ -9057,6 +9057,8 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <part name="LED2" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="LED" device=""/>
 <part name="GND8" library="SparkFun-PowerSymbols" library_urn="urn:adsk.eagle:library:530" deviceset="GND" device=""/>
 <part name="GND11" library="SparkFun-PowerSymbols" library_urn="urn:adsk.eagle:library:530" deviceset="GND" device=""/>
+<part name="R9" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="200OHM" device="-0603-1/10W-1%" package3d_urn="urn:adsk.eagle:package:39650/1" value="200"/>
+<part name="R10" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="200OHM" device="-0603-1/10W-1%" package3d_urn="urn:adsk.eagle:package:39650/1" value="200"/>
 </parts>
 <sheets>
 <sheet>
@@ -9070,8 +9072,8 @@ SparkFun BigTime Watch Kit&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
 <text x="76.2" y="-12.7" size="1.778" layer="91">MAX7219 LED Driver</text>
 <text x="-129.54" y="110.744" size="1.778" layer="91">+3.3V MIC5205 Regulator</text>
 <text x="-15.748" y="93.472" size="1.778" layer="91">MMA7361 Accelerometer</text>
-<text x="-13.208" y="33.02" size="1.778" layer="91">Start Button</text>
-<text x="-13.716" y="20.828" size="1.778" layer="91">Reset Button</text>
+<text x="-7.112" y="33.02" size="1.778" layer="91">Start Button</text>
+<text x="-7.62" y="20.828" size="1.778" layer="91">Reset Button</text>
 <text x="-29.464" y="8.636" size="1.778" layer="91">Output</text>
 <text x="114.3" y="-116.84" size="2.54" layer="229">Sensor: Accelerometer
 Actuator: LED Matrix
@@ -9122,16 +9124,18 @@ Microcontroller: Atmega328P</text>
 <instance part="U$2" gate="G$1" x="-3.556" y="71.628"/>
 <instance part="SW" gate="1" x="-147.828" y="102.616"/>
 <instance part="GND4" gate="1" x="-141.224" y="93.472"/>
-<instance part="S1" gate="G$1" x="0.508" y="38.1" smashed="yes">
-<attribute name="NAME" x="0.508" y="39.624" size="1.778" layer="95" font="vector" align="bottom-center"/>
+<instance part="S1" gate="G$1" x="6.604" y="38.1" smashed="yes">
+<attribute name="NAME" x="6.604" y="39.624" size="1.778" layer="95" font="vector" align="bottom-center"/>
 </instance>
-<instance part="S2" gate="G$1" x="0.508" y="26.416" smashed="yes">
-<attribute name="NAME" x="0.508" y="27.94" size="1.778" layer="95" font="vector" align="bottom-center"/>
+<instance part="S2" gate="G$1" x="6.604" y="26.416" smashed="yes">
+<attribute name="NAME" x="6.604" y="27.94" size="1.778" layer="95" font="vector" align="bottom-center"/>
 </instance>
-<instance part="LED1" gate="G$1" x="-10.668" y="38.1" rot="R90"/>
-<instance part="LED2" gate="G$1" x="-10.668" y="26.416" rot="R90"/>
-<instance part="GND8" gate="1" x="10.16" y="35.052"/>
-<instance part="GND11" gate="1" x="10.16" y="23.368"/>
+<instance part="LED1" gate="G$1" x="-4.572" y="38.1" rot="R90"/>
+<instance part="LED2" gate="G$1" x="-4.572" y="26.416" rot="R90"/>
+<instance part="GND8" gate="1" x="16.256" y="35.052"/>
+<instance part="GND11" gate="1" x="16.256" y="23.368"/>
+<instance part="R9" gate="G$1" x="-17.272" y="31.496" rot="R90"/>
+<instance part="R10" gate="G$1" x="-11.684" y="20.828" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -9209,14 +9213,14 @@ Microcontroller: Atmega328P</text>
 <segment>
 <pinref part="GND8" gate="1" pin="GND"/>
 <pinref part="S1" gate="G$1" pin="2"/>
-<wire x1="10.16" y1="37.592" x2="10.16" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="10.16" y1="38.1" x2="5.588" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="16.256" y1="37.592" x2="16.256" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="16.256" y1="38.1" x2="11.684" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="GND11" gate="1" pin="GND"/>
 <pinref part="S2" gate="G$1" pin="2"/>
-<wire x1="10.16" y1="25.908" x2="10.16" y2="26.416" width="0.1524" layer="91"/>
-<wire x1="10.16" y1="26.416" x2="5.588" y2="26.416" width="0.1524" layer="91"/>
+<wire x1="16.256" y1="25.908" x2="16.256" y2="26.416" width="0.1524" layer="91"/>
+<wire x1="16.256" y1="26.416" x2="11.684" y2="26.416" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="MISO" class="0">
@@ -9605,32 +9609,14 @@ Microcontroller: Atmega328P</text>
 <segment>
 <pinref part="S2" gate="G$1" pin="1"/>
 <pinref part="LED2" gate="G$1" pin="C"/>
-<wire x1="-4.572" y1="26.416" x2="-5.588" y2="26.416" width="0.1524" layer="91"/>
+<wire x1="1.524" y1="26.416" x2="0.508" y2="26.416" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$35" class="0">
 <segment>
 <pinref part="S1" gate="G$1" pin="1"/>
 <pinref part="LED1" gate="G$1" pin="C"/>
-<wire x1="-4.572" y1="38.1" x2="-5.588" y2="38.1" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$37" class="0">
-<segment>
-<pinref part="LED1" gate="G$1" pin="A"/>
-<wire x1="-13.208" y1="38.1" x2="-18.288" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="-18.288" y1="38.1" x2="-18.288" y2="15.748" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="PD1(TXD)"/>
-<wire x1="-18.288" y1="15.748" x2="-30.988" y2="15.748" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$38" class="0">
-<segment>
-<pinref part="LED2" gate="G$1" pin="A"/>
-<wire x1="-13.208" y1="26.416" x2="-15.748" y2="26.416" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="PD2(INT0)"/>
-<wire x1="-15.748" y1="26.416" x2="-15.748" y2="13.208" width="0.1524" layer="91"/>
-<wire x1="-15.748" y1="13.208" x2="-30.988" y2="13.208" width="0.1524" layer="91"/>
+<wire x1="1.524" y1="38.1" x2="0.508" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$20" class="0">
@@ -9651,6 +9637,38 @@ Microcontroller: Atmega328P</text>
 <wire x1="109.22" y1="-19.812" x2="109.22" y2="-5.08" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="LOAD"/>
 <wire x1="109.22" y1="-5.08" x2="104.14" y2="-5.08" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$37" class="0">
+<segment>
+<pinref part="LED1" gate="G$1" pin="A"/>
+<pinref part="R9" gate="G$1" pin="2"/>
+<wire x1="-7.112" y1="38.1" x2="-17.272" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="-17.272" y1="38.1" x2="-17.272" y2="36.576" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$38" class="0">
+<segment>
+<pinref part="R9" gate="G$1" pin="1"/>
+<pinref part="U1" gate="G$1" pin="PD1(TXD)"/>
+<wire x1="-17.272" y1="26.416" x2="-17.272" y2="15.748" width="0.1524" layer="91"/>
+<wire x1="-17.272" y1="15.748" x2="-30.988" y2="15.748" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$40" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PD2(INT0)"/>
+<pinref part="R10" gate="G$1" pin="1"/>
+<wire x1="-30.988" y1="13.208" x2="-11.684" y2="13.208" width="0.1524" layer="91"/>
+<wire x1="-11.684" y1="13.208" x2="-11.684" y2="15.748" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$41" class="0">
+<segment>
+<pinref part="R10" gate="G$1" pin="2"/>
+<pinref part="LED2" gate="G$1" pin="A"/>
+<wire x1="-11.684" y1="25.908" x2="-11.684" y2="26.416" width="0.1524" layer="91"/>
+<wire x1="-11.684" y1="26.416" x2="-7.112" y2="26.416" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
