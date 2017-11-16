@@ -8268,14 +8268,10 @@ Microcontroller: Atmega328P</text>
 <pinref part="BT3" gate="G$1" pin="-"/>
 </segment>
 <segment>
-<pinref part="5V" gate="G$1" pin="1"/>
-<wire x1="12.7" y1="66.04" x2="-7.62" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="-7.62" y1="66.04" x2="-7.62" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="GND10" gate="1" pin="GND"/>
 <pinref part="GND" gate="G$1" pin="1"/>
 <wire x1="-7.62" y1="55.88" x2="-7.62" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="12.7" y1="55.88" x2="-7.62" y2="55.88" width="0.1524" layer="91"/>
-<junction x="-7.62" y="55.88"/>
 </segment>
 <segment>
 <pinref part="GND8" gate="1" pin="GND"/>
