@@ -149,6 +149,7 @@
 <wire x1="100" y1="80" x2="0" y2="80" width="0" layer="20"/>
 <wire x1="0" y1="80" x2="0" y2="0" width="0" layer="20"/>
 <text x="4.3314625" y="31.85795" size="2.54" layer="21" font="fixed" rot="R90">Group 10 - version 6</text>
+<text x="15.12919375" y="3.83101875" size="1.778" layer="21">Matrix Maze Game</text>
 </plain>
 <libraries>
 <library name="adafruit" urn="urn:adsk.eagle:library:420">
