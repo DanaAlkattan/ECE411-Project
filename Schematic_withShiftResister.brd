@@ -1280,22 +1280,22 @@ Please make sure your boards conform to these design rules.</description>
 <wire x1="58.301825" y1="55.448328125" x2="58.301825" y2="45.268175" width="0.3556" layer="16"/>
 <wire x1="58.301825" y1="45.268175" x2="58.42" y2="45.15" width="0.3556" layer="16"/>
 </signal>
-<signal name="N$4">
-<contactref element="LED-MATRIX" pad="12"/>
-<contactref element="R4" pad="2"/>
-<via x="74.894121875" y="62.402909375" extent="1-16" drill="0.3556"/>
-<wire x1="78.342934375" y1="62.402909375" x2="74.894121875" y2="62.402909375" width="0.3556" layer="16"/>
+<signal name="S$1">
 <wire x1="78.342934375" y1="62.402909375" x2="78.3821125" y2="62.36373125" width="0.3556" layer="16"/>
 <wire x1="78.3821125" y1="62.36373125" x2="78.421290625" y2="62.402909375" width="0.3556" layer="16"/>
 <wire x1="78.421290625" y1="62.402909375" x2="78.4605375" y2="62.402909375" width="0.3556" layer="16"/>
 <via x="78.4605375" y="62.402909375" extent="1-16" drill="0.3556"/>
 <wire x1="78.4605375" y1="62.402909375" x2="84.111528125" y2="56.75191875" width="0.3556" layer="1"/>
+<contactref element="R4" pad="2"/>
 <wire x1="84.111528125" y1="56.75191875" x2="84.111528125" y2="54.271534375" width="0.3556" layer="1"/>
-<wire x1="74.894121875" y1="62.402909375" x2="67.28435" y2="62.402909375" width="0.3556" layer="16"/>
+</signal>
+<signal name="N$4">
+<contactref element="LED-MATRIX" pad="12"/>
 <wire x1="62.652340625" y1="67.03491875" x2="51.409728125" y2="67.03491875" width="0.3556" layer="16"/>
 <wire x1="51.409728125" y1="67.03491875" x2="50.8" y2="67.644646875" width="0.3556" layer="16"/>
 <wire x1="50.8" y1="67.644646875" x2="50.8" y2="69.15" width="0.3556" layer="16"/>
-<wire x1="67.28435" y1="62.402909375" x2="62.652340625" y2="67.03491875" width="0.3556" layer="16"/>
+<wire x1="62.652340625" y1="67.03491875" x2="67.28435" y2="62.402909375" width="0.3556" layer="16"/>
+<wire x1="67.28435" y1="62.402909375" x2="77.72393125" y2="62.402909375" width="0.254" layer="16"/>
 </signal>
 <signal name="N$5">
 <contactref element="LED-MATRIX" pad="1"/>
@@ -1914,6 +1914,129 @@ Please make sure your boards conform to these design rules.</description>
 <wire x1="61.294834375" y1="45.541690625" x2="57.728484375" y2="41.975340625" width="0.3556" layer="1"/>
 </signal>
 </signals>
+<errors>
+<approved hash="1	20	6be889148a1f68e3"/>
+<approved hash="1	20	4478087407f64bfa"/>
+<approved hash="1	20	e9b7ba33bbfae87e"/>
+<approved hash="1	20	f8c987558806f79a"/>
+<approved hash="1	20	9edb421f40109cd4"/>
+<approved hash="1	20	8f68418c41788f9c"/>
+<approved hash="1	20	bd844dc04dcebd8a"/>
+<approved hash="1	20	28ed77e174c12bcd"/>
+<approved hash="1	20	139caf28af6713d3"/>
+<approved hash="1	20	f5b0e874ee84f340"/>
+<approved hash="1	20	0a78bc8cbd140be0"/>
+<approved hash="1	20	f08424082409f085"/>
+<approved hash="1	20	8fc825e426b08c9c"/>
+<approved hash="1	20	b568ed549264ca58"/>
+<approved hash="1	20	a8490ba50b39a8d5"/>
+<approved hash="1	20	995ba61fa79398d7"/>
+<approved hash="1	20	ea88fdd4fa38ed64"/>
+<approved hash="1	20	7947fd1bf216764a"/>
+<approved hash="1	20	cdd5e2519c6eb3ea"/>
+<approved hash="1	20	2ada274e2988241c"/>
+<approved hash="1	20	a56afb7efa00a414"/>
+<approved hash="1	20	6a1840445ff675aa"/>
+<approved hash="1	20	6db08484845b6d6f"/>
+<approved hash="1	20	da114e654c30d844"/>
+<approved hash="1	20	a9d613d212dfa8db"/>
+<approved hash="1	20	0d3ab18eb28b0e3f"/>
+<approved hash="1	20	b80b14471545b909"/>
+<approved hash="1	20	476c01f0013047ac"/>
+<approved hash="1	20	681b0417079a6b96"/>
+<approved hash="1	20	9f2904f5057c9ea0"/>
+<approved hash="1	20	a3a5a781a663a247"/>
+<approved hash="1	20	0ff6b612b7980e7c"/>
+<approved hash="1	20	d78f6cbb6c4dd779"/>
+<approved hash="1	20	1797b533b77a15de"/>
+<approved hash="1	20	ab5675f274ebaa4f"/>
+<approved hash="1	20	362bd3bfd07935ed"/>
+<approved hash="1	20	a6b8d934da61a5ed"/>
+<approved hash="1	20	074a3c3e3c740700"/>
+<approved hash="1	20	6ed09f4c9c616dfd"/>
+<approved hash="1	20	9460558c55ed9401"/>
+<approved hash="1	20	68c7dcebddbd6991"/>
+<approved hash="1	20	abf4b7f0b6d0aad4"/>
+<approved hash="1	20	165b44a7471415e8"/>
+<approved hash="1	20	3c69341d342a3c5e"/>
+<approved hash="1	20	9ea07414741b9eaf"/>
+<approved hash="1	20	4db8b37cb22b4cef"/>
+<approved hash="1	20	4ddb55df57cc4fc8"/>
+<approved hash="1	20	d874440044c3d8b7"/>
+<approved hash="1	20	b2b803fc02d4b390"/>
+<approved hash="1	20	ca98404c41f1cb25"/>
+<approved hash="1	20	dcff3f0b3e17dde3"/>
+<approved hash="1	20	c53cc278c2eec5aa"/>
+<approved hash="1	20	9e3464806aec9058"/>
+<approved hash="1	20	e0fab4868b60df1c"/>
+<approved hash="1	20	db5c8d908d20dbec"/>
+<approved hash="1	20	a8fc63206235a9e9"/>
+<approved hash="1	20	e9385f8c5db2eb06"/>
+<approved hash="1	20	5da8658c649b5cbf"/>
+<approved hash="1	20	a5a53ce93eeda7a1"/>
+<approved hash="1	20	79c815b41546793a"/>
+<approved hash="1	20	3b2820d4222439d8"/>
+<approved hash="1	20	be383cfc3d6fbfab"/>
+<approved hash="1	20	96984cccb2db688f"/>
+<approved hash="1	20	aac9b835b8e0aa1c"/>
+<approved hash="1	20	bafb883f89e9bb2d"/>
+<approved hash="1	20	6e8ce5a0e5576e7b"/>
+<approved hash="1	20	e86b6c176c18e864"/>
+<approved hash="1	20	8e4902ed051989bd"/>
+<approved hash="1	20	faa4ab18aa5bfbe7"/>
+<approved hash="1	20	5a4f5c6b5c6a5a4e"/>
+<approved hash="1	20	4ea6070207364e92"/>
+<approved hash="1	20	9ec8612c663099d4"/>
+<approved hash="1	20	7ef8502450347ee8"/>
+<approved hash="1	20	33c4da58dc5835c4"/>
+<approved hash="1	20	abe83a7c3c79aded"/>
+<approved hash="1	20	8f9bf527f6328c8e"/>
+<approved hash="1	20	46f0941c8a1b58f7"/>
+<approved hash="1	20	4d4814ec155c4cf8"/>
+<approved hash="1	20	4def9c039a314bdd"/>
+<approved hash="1	20	b90b73cf73ccb908"/>
+<approved hash="1	20	1849fc6dfc59187d"/>
+<approved hash="1	20	9a4b0c8f0a819c45"/>
+<approved hash="1	20	0738c5b4c78b0507"/>
+<approved hash="1	20	8718791c7aac84a8"/>
+<approved hash="1	20	b658e054e1e4b7e8"/>
+<approved hash="1	20	bfa9384538fbbf17"/>
+<approved hash="1	20	a853f42ff420a85c"/>
+<approved hash="1	20	a7d5bdf182f298d6"/>
+<approved hash="1	20	5998c5d4c6655a29"/>
+<approved hash="1	20	ef4b636f6518e93c"/>
+<approved hash="1	20	a8a7ec2be228a6a4"/>
+<approved hash="1	20	eb8a023e0139e88d"/>
+<approved hash="1	20	a55b14e71604a7b8"/>
+<approved hash="1	20	0534aeb0ac7007f4"/>
+<approved hash="1	20	52dc71407002539e"/>
+<approved hash="1	20	28283d5c225c3728"/>
+<approved hash="1	20	1e4e5dca5bff187b"/>
+<approved hash="1	20	0e5eb3c2b3c40e58"/>
+<approved hash="1	20	09cb7e377e2f09d3"/>
+<approved hash="1	20	6127b383b1826326"/>
+<approved hash="1	20	032e1d121cf302cf"/>
+<approved hash="1	20	4b4e27d226504acc"/>
+<approved hash="1	20	e8b27c8e7c9be8a7"/>
+<approved hash="1	20	3939b3b5b36539e9"/>
+<approved hash="1	20	0772bf0ebc390445"/>
+<approved hash="1	20	dbe406e805c2d8ce"/>
+<approved hash="1	20	777cf370fc0f7803"/>
+<approved hash="1	20	7ee2f37ef0c47d58"/>
+<approved hash="1	20	7f20c894ce4479f0"/>
+<approved hash="1	20	82dd8809888d8259"/>
+<approved hash="1	20	bd31b395b242bce6"/>
+<approved hash="1	20	397ff573f44e3842"/>
+<approved hash="1	20	7b991fa51ef87ac4"/>
+<approved hash="1	20	e4a4800083e0e744"/>
+<approved hash="1	20	723a8fae89907404"/>
+<approved hash="1	20	072283ae82840608"/>
+<approved hash="1	20	7424d750d61e756a"/>
+<approved hash="1	20	1b75c779c60e1a02"/>
+<approved hash="1	20	392c4e584e6b391f"/>
+<approved hash="1	20	6824fc90fc9e682a"/>
+<approved hash="1	20	98288e148e73984f"/>
+</errors>
 </board>
 </drawing>
 <compatibility>

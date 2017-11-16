@@ -8798,6 +8798,34 @@ Microcontroller: Atmega328P</text>
 </nets>
 </sheet>
 </sheets>
+<errors>
+<approved hash="101,1,12.7,66.04,5V,1,,,,"/>
+<approved hash="104,1,-25.4,-48.26,ISP,VCC,3.3V,,,"/>
+<approved hash="104,1,40.64,25.4,U5,VCC,3.3V,,,"/>
+<approved hash="104,1,40.64,-17.78,U6,VCC,3.3V,,,"/>
+<approved hash="104,1,-55.88,-71.12,BT1,-,N$31,,,"/>
+<approved hash="104,1,-45.72,-71.12,BT1,+,N$36,,,"/>
+<approved hash="104,1,-66.04,-71.12,BT2,-,N$30,,,"/>
+<approved hash="104,1,-55.88,-71.12,BT2,+,N$31,,,"/>
+<approved hash="104,1,-76.2,-71.12,BT3,-,GND,,,"/>
+<approved hash="104,1,-66.04,-71.12,BT3,+,N$30,,,"/>
+<approved hash="113,1,14.4209,6.627,FRAME1,,,,,"/>
+<approved hash="113,1,157.531,-47.0408,LED-MATRIX,,,,,"/>
+<approved hash="113,1,-41.91,-72.3815,SW,,,,,"/>
+<approved hash="113,1,-50.8,-72.5526,BT1,,,,,"/>
+<approved hash="113,1,-60.96,-72.5526,BT2,,,,,"/>
+<approved hash="113,1,-71.12,-72.5526,BT3,,,,,"/>
+<approved hash="113,1,-15.0029,67.5361,X,,,,,"/>
+<approved hash="113,1,-15.0029,62.4561,Y,,,,,"/>
+<approved hash="113,1,-15.0029,57.3761,Z,,,,,"/>
+<approved hash="113,1,-15.0029,52.2961,SL,,,,,"/>
+<approved hash="113,1,-15.0029,47.2161,0G,,,,,"/>
+<approved hash="113,1,12.9371,67.5361,5V,,,,,"/>
+<approved hash="113,1,12.9371,62.4561,3.3V,,,,,"/>
+<approved hash="113,1,12.9371,57.3761,GND,,,,,"/>
+<approved hash="113,1,12.9371,52.2961,GS,,,,,"/>
+<approved hash="113,1,12.9371,47.2161,ST,,,,,"/>
+</errors>
 </schematic>
 </drawing>
 <compatibility>
