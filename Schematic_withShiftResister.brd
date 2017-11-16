@@ -717,7 +717,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <clearance class="0" value="0.254"/>
 </class>
 </classes>
-<designrules name="osh-park-2-layers-design-rules *">
+<designrules name="osh-park-2-layers-design-rules">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 Die Standard-Design-Rules sind so gewählt, dass sie für 
@@ -1120,12 +1120,10 @@ Please make sure your boards conform to these design rules.</description>
 <via x="35.138671875" y="26.10363125" extent="1-16" drill="0.35"/>
 <via x="52.297834375" y="14.759040625" extent="1-16" drill="0.35"/>
 <via x="25.410028125" y="11.616296875" extent="1-16" drill="0.35"/>
-<via x="58.88576875" y="14.069175" extent="1-16" drill="0.35"/>
 <via x="63.55860625" y="14.4524625" extent="1-16" drill="0.35"/>
 <via x="75.891703125" y="13.30266875" extent="1-16" drill="0.35"/>
 <via x="85.160734375" y="13.14938125" extent="1-16" drill="0.35"/>
 <via x="92.8977" y="13.30266875" extent="1-16" drill="0.35"/>
-<via x="96.11505625" y="21.274521875" extent="1-16" drill="0.35"/>
 <via x="96.191634375" y="30.319525" extent="1-16" drill="0.35"/>
 <via x="92.36144375" y="36.375075" extent="1-16" drill="0.35"/>
 <via x="92.97428125" y="61.287078125" extent="1-16" drill="0.35"/>
@@ -1152,7 +1150,6 @@ Please make sure your boards conform to these design rules.</description>
 <via x="66.392796875" y="8.186784375" extent="1-16" drill="0.35"/>
 <via x="34.58704375" y="8.002696875" extent="1-16" drill="0.35"/>
 <via x="22.912696875" y="7.358428125" extent="1-16" drill="0.35"/>
-<via x="49.203028125" y="9.015078125" extent="1-16" drill="0.35"/>
 <via x="89.144084375" y="78.00688125" extent="1-16" drill="0.35"/>
 <via x="82.709375" y="65.354190625" extent="1-16" drill="0.35"/>
 <via x="79.951634375" y="45.876709375" extent="1-16" drill="0.35"/>
@@ -1760,7 +1757,7 @@ Please make sure your boards conform to these design rules.</description>
 <wire x1="77.202221875" y1="20.954175" x2="76.38523125" y2="20.137184375" width="0.3556" layer="16"/>
 <wire x1="76.38523125" y1="20.137184375" x2="63.21551875" y2="20.137184375" width="0.3556" layer="16"/>
 <wire x1="63.46628125" y1="72.592946875" x2="68.52869375" y2="72.592946875" width="0.254" layer="1"/>
-<wire x1="68.52869375" y1="72.592946875" x2="68.6220375" y2="72.499603125" width="0.1524" layer="1"/>
+<wire x1="68.52869375" y1="72.592946875" x2="68.6220375" y2="72.499603125" width="0.254" layer="1"/>
 </signal>
 <signal name="N$19">
 <contactref element="Z" pad="1"/>
