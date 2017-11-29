@@ -1,182 +1,509 @@
-/*
- * GccApplication13.c
- *
- * Created: 11/23/2017 1:00:23 AM
- * Author : billy
- */ 
+/*************************************************************************
+ *************************************************************************
+							LED MATRIX MAZE GAME 
+ * Authors: Thao Tran
+			Dana Alkattan
+			William Boyd
+			Andrew Vo
+ *************************************************************************
+ ************************************************************************/
 
-#include<avr/io.h>
-#include<time.h>
-#include<math.h>
-#include<util/delay.h>
+#define	  F_CPU			16000000 
 
-static int offsets [] = {0, 0, 0};		//global offsets
-static int _average = 10;				//number of iterations to find averages
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
 
+#define BIT_IS_CLEAR(byte, bit) (!(byte & (1 << bit)))
 
 //reference voltage for device
 #define VOLTAGE 3.3
 
 //ADC channels for accelerometer input
-#define X_CHANNEL 5
-#define Y_CHANNEL 4
-#define Z_CHANNEL 3
+#define X_CHANNEL 0x45
+#define Y_CHANNEL 0x44
+#define Z_CHANNEL 0x43
 
-#ifndef F_CPU
-#define F_CPU 1600000UL 
-#endif
+//int direction = 0;
+int currRow = 0;
+int currCol = 0;
 
+int cursor_counter = 0;
+int exit_counter = 0;
 
-int init_ADC();
 int make_orientation();
-int make_xy(int to_make);
-int _mapMMA7361G(int value);
-void setOffSets(int xOffSet, int yOffSet, int zOffSet);
-int getXVolt();
-int getYVolt();
-int getZVolt();
 int getXRaw();
 int getYRaw();
 int getZRaw();
-int _mapMMA7361V(int value);
-void calibrate();
-int getOrientation();
-int getXAccel();
-int getYAccel();
-int getZAccel();
-int ATmap(int to_map, int in_min, int in_max, int out_min, int out_max);
+int init_ADC();
+
+/*************************************************************************
+						Greeting & 10 Mazes
+*************************************************************************/
+uint16_t TEMP[8] = {0b1000000011100111, // for testing
+					0b0100000011111111,
+					0b0010000011111111,
+					0b0001000001111110,
+					0b0000100011111111,
+					0b0000010011111111,
+					0b0000001011111111,
+					0b0000000111111111};
+					
+uint16_t SMILE[8] = {	0b1000000000111100,
+						0b0100000001111110,
+						0b0010000011011011,
+						0b0001000011111111,
+						0b0000100011011011,
+						0b0000010011100111,
+						0b0000001001111110,
+						0b0000000100111100};	
+							
+uint16_t HELLO[8] = {	0b1000000011111111,
+						0b0100000010101101,
+						0b0010000010101101,
+						0b0001000010100001,
+						0b0000100010101101,
+						0b0000010010101101,
+						0b0000001011111111,
+						0b0000000111111111};
 
 
-//maps function from one range to another. copied from arduino library and functions exactly like arduino map, except takes int parameters and
-//returns int
-int ATmap(int to_map, int in_min, int in_max, int out_min, int out_max)
+uint16_t THREE[8] = {	0b1000000011111111,
+						0b0100000011000011,
+						0b0010000011011111,
+						0b0001000011000011,
+						0b0000100011011111,
+						0b0000010011000011,
+						0b0000001011111111,
+						0b0000000111111111};
+
+uint16_t TWO[8]	  = {	0b1000000011111111,
+						0b0100000011000011,
+						0b0010000011011111,
+						0b0001000011000011,
+						0b0000100011111011,
+						0b0000010011000011,
+						0b0000001011111111,
+						0b0000000111111111};
+
+
+uint16_t ONE[8]	  = {	0b1000000011111111,
+						0b0100000011101111,
+						0b0010000011100111,
+						0b0001000011101111,
+						0b0000100011101111,
+						0b0000010011101111,
+						0b0000001011111111,
+						0b0000000111111111};
+
+ 
+uint16_t CLEAR[8] = {	0b1000000011111111,
+						0b0100000011111111,
+						0b0010000011111111,
+						0b0001000011111111,
+						0b0000100011111111,
+						0b0000010011111111,
+						0b0000001011111111,
+						0b0000000111111111};
+					 
+uint16_t MAZE1[8] =	{	0b1000000000000001,
+						0b0100000001111111,
+						0b0010000001011000,
+						0b0001000001011110,
+						0b0000100001000010,
+						0b0000010001111110,
+						0b0000001000000010,
+						0b0000000111111110};
+
+
+uint16_t MAZE2[8] = {	0b1000000010111001,
+						0b0100000010111011,
+						0b0010000000010010,
+						0b0001000011111110,
+						0b0000100010001000,
+						0b0000010011101011,
+						0b0000001010111001,
+						0b0000000110001111};
+
+
+uint16_t MAZE3[8] = {	0b1000000000000001,
+						0b0100000001111111,
+						0b0010000001000101,
+						0b0001000001010101,
+						0b0000100001010101,
+						0b0000010001010101,
+						0b0000001011110001,
+						0b0000000111000111};
+
+uint16_t MAZE4[8] = {	0b1000000011100001,
+						0b0100000010010111,
+						0b0010000001110010,
+						0b0001000010011110,
+						0b0000100010110000,
+						0b0000010000011110,
+						0b0000001001110000,
+						0b0000000111001110};
+
+
+
+uint16_t MAZE5[8] = {	0b1000000010111001,
+						0b0100000010100011,
+						0b0010000001101110,
+						0b0001000001101000,
+						0b0000100001001100,
+						0b0000010001111100,
+						0b0000001010100110,
+						0b0000000111110001};
+
+
+uint16_t MAZE6[8] = {	0b1000000010000011,
+						0b0100000001111110,
+						0b0010000010010110,
+						0b0001000011011000,
+						0b0000100000010110,
+						0b0000010001111101,
+						0b0000001011010001,
+						0b0000000110000111};
+
+
+uint16_t MAZE7[8] = {	0b1000000000000001,
+						0b0100000001111111,
+						0b0010000000101010,
+						0b0001000000101010,
+						0b0000100000101010,
+						0b0000010000101010,
+						0b0000001011110010,
+						0b0000000110010000};
+
+uint16_t MAZE0[8] = {	0b1000000000000001,
+						0b0100000001111111,
+						0b0010000001001010,
+						0b0001000011111010,
+						0b0000100001011110,
+						0b0000010001000010,
+						0b0000001001111110,
+						0b0000000111000000};
+
+uint16_t MAZE8[8] = {	0b1000000000100001,
+						0b0100000000101111,
+						0b0010000001101000,
+						0b0001000001101110,
+						0b0000100001001010,
+						0b0000010001111010,
+						0b0000001011001110,
+						0b0000000110000010};
+
+
+uint16_t MAZE9[8] = {	0b1000000010000001,
+						0b0100000010111111,
+						0b0010000010100000,
+						0b0001000001111110,
+						0b0000100000000010,
+						0b0000010001111110,
+						0b0000001001000100,
+						0b0000000111111110};
+
+uint16_t MAZE10[8] = {	0b1000000010000001,
+						0b0100000011101111,
+						0b0010000000101000,
+						0b0001000001101110,
+						0b0000100000100010,
+						0b0000010010111110,
+						0b0000001011100010,
+						0b0000000111100111};
+
+
+
+ 
+/*************************************************************************
+						Configure Connections
+*************************************************************************/
+#define		HC595_DDR		DDRD		
+#define		HC595_PORT		PORTD
+#define		HC595_IN		PD0		//Data input to the first register
+#define		HC595_CLOCK		PD1		//Clock signal
+#define		HC595_LATCH		PD2		//Latch signal
+#define		HC595_CLEAR		PD3		//Clear signal
+
+/*************************************************************************
+						HC595 Initialization
+*************************************************************************/
+void HC595_Init(void)
 {
-	return (to_map - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	//Set PORTD0-2 to be outputs
+	HC595_DDR |= (1<<HC595_IN) | (1<<HC595_CLOCK) | (1<<HC595_LATCH) | (1<<HC595_CLEAR);
+	
+	//Pull clear high
+	HC595_PORT |= (1<<HC595_CLEAR);
 }
 
-//sets offsets for accelerometer. device must be held flat during calibration
-
-void calibrate() {
-  
-  double var = 5000;
-  double sumX = 0;
-  double sumY = 0;
-  double sumZ = 0;
-  double x;
-  double y;
-  double z;
-  int make_direction;
-  offsets[0] = 0;
-  offsets[1] = 0;
-  offsets[2] = 0;
-  for (int i = 0;i<var;i++)
-  {
-    sumX = sumX + getXVolt();
-    sumY = sumY + getYVolt();
-    sumZ = sumZ + getZVolt();
-    // print wait indicator
-	/*if (i%100 == 0)
-    {
-      Serial.print(".");
-    }*/
-  }
-    //gs high
-    //setOffSets(1672 - sumX / var,1671 - sumY / var, + 1876 - sumZ / var);
-    //gs low
-    setOffSets(1650 - sumX / var,1650 - sumY / var, + 2450 - sumZ / var);
-
-    x = getXVolt();
-    y = getYVolt();
-    z = getZVolt();
-    
-    
-  /*  if (abs(getOrientation())!=3)
-  {
-    Serial.print("\nunable to calibrate");
-    //setOffSets(0,0,0);
-  }
-  else
-  {
-    Serial.print("\nDONE");
-  }*/
-
-   for(int i=0; i < 20; ++i)
-   {
-    x = getXVolt();
-    y = getYVolt();
-    z = getZVolt();
-    
-    /*Serial.println();
-    Serial.print(sumX/var);
-    Serial.print('\t');
-    Serial.print(sumY/var);
-    Serial.print('\t');
-    Serial.print(sumZ/var);
-    Serial.print('\n');
-
-    Serial.print(x);
-    Serial.print('\t');
-    Serial.print(y);
-    Serial.print('\t');
-    Serial.print(z);
-    Serial.print('\n');
-
-    delay(500);*/
-    
-   }
-
-   /*while(1)
-   {
-      make_direction = make_orientation();
-      Serial.println(make_direction);
-
-      switch(make_direction)
-      {
-        case -1: {
-          digitalWrite(5, HIGH);
-          digitalWrite(6, LOW);
-          digitalWrite(7, LOW);
-          digitalWrite(8, LOW);
-          break;
-        }
-        case 1: {
-          digitalWrite(6, HIGH);
-          digitalWrite(5, LOW);
-          digitalWrite(7, LOW);
-          digitalWrite(8, LOW);
-          break;
-        }
-        case -2: {
-          digitalWrite(7, HIGH);
-          digitalWrite(6, LOW);
-          digitalWrite(5, LOW);
-          digitalWrite(8, LOW);
-          break;
-        }
-        case 2: {
-          digitalWrite(8, HIGH);
-          digitalWrite(6, LOW);
-          digitalWrite(7, LOW);
-          digitalWrite(5, LOW);
-          break;
-        }
-
-        default: {
-          digitalWrite(5, LOW);
-          digitalWrite(6, LOW);
-          digitalWrite(7, LOW);
-          digitalWrite(8, LOW);
-        }
-        
-      }
-
-      
-
-      delay(500);      
-   }*/
-   
-  
+/*************************************************************************
+						HC595 Clock Pulse
+*************************************************************************/
+void HC595_Pulse(void)
+{
+	HC595_PORT |= (1<<HC595_CLOCK);
+	//_delay_us(1);
+	HC595_PORT &= ~(1<<HC595_CLOCK);
 }
+
+/*************************************************************************
+							HC595 Latch
+*************************************************************************/
+void HC595_Latch(void)
+{
+	HC595_PORT |= (1<<HC595_LATCH);
+	HC595_PORT &= ~(1<<HC595_LATCH);
+
+}
+
+/*************************************************************************
+						HC595 Send Serial Inputs
+*************************************************************************/
+void HC595_Shift(uint16_t data)
+{
+	for (uint8_t i = 0; i < 16; i++)
+	{
+		if (data & 0b1000000000000000)
+			HC595_PORT |= (1<<HC595_IN);	//Data input = 1
+		else 
+			HC595_PORT &= ~(1<<HC595_IN);	//Data input = 0
+		
+		HC595_Pulse();	//Pulse the clock
+		
+		data = data << 1; 
+	}
+	
+	HC595_Latch();		//Latch data to outputs
+}
+/************************************************************************
+// moving the cursor based on tilting
+************************************************************************/
+
+void accelerometer_logic(uint16_t data[])
+{			
+	//returns -1 = left
+	// 1 = right
+	// -2 = down
+	// 2 = up
+	int direction = 0;
+	direction = make_orientation();
+	switch(direction)
+	{
+		case(2): 			// tilt right (down)
+			if(currCol == 7)
+			{
+				break;
+			}else
+			{
+				if((data[currRow] & (1 << (currCol + 1))) == (1 << (currCol+1)))// the right bit is = 0, turn on
+				{
+					data[currRow] |= (1 << (currCol));
+					currCol++;
+					break;
+				}else
+				break;
+			}
+		case(1):				// tilt left
+			if(currCol == 0)
+			{
+				break;
+			}else
+			{
+				if((data[currRow] & (1<< (currCol - 1)))== (1 << (currCol - 1)))// the left bit is = 0, turn on
+				{
+					data[currRow] |= (1 << currCol);
+					currCol--;
+					break;
+				}else
+				break;
+			}
+		case(3):				// tilt up
+			if(currRow == 0)
+			{
+				break;
+			}else
+			{
+				if((data[currRow-1] & (1 << currCol)) == (1 << currCol)) // the upper bit is = 0, turn on
+				{
+					data[currRow] |= (1 << currCol);
+					currRow--;
+					break;
+				}else
+				break;
+			}
+		case(4):				// tilt down
+			if(currRow == 7)
+			{
+				break;
+			}else
+			{
+				if((data[currRow+1] & (1 << currCol)) == (1 << currCol)) // the down bit is = 0, turn on
+				{
+					data[currRow] |= (1 << currCol);
+					currRow++;
+					break;
+				}else
+				break;
+			}
+		default:
+			break;
+	}
+}
+
+/*************************************************************************
+						Button Interrupt Init
+*************************************************************************/
+void Button_Init(void)
+{
+	DDRD &= ~(1 << PORTD3);		//Set PD3 for input
+	PORTD |= (1 << PORTD3);		// set PD2/INT0 (pin 4) internal pull-up resistor*/
+
+	PCICR |= (1 << PCIE2);      //Set pin-change interrupt for D pins
+	PCMSK2 |= (1 << PCINT19);   //Mask PCINT19
+	sei();                      //Set global interrupt enable bit
+}
+
+/*************************************************************************
+							Greeting Matrix
+*************************************************************************/
+void Greet_Matrix(uint16_t data[])
+{
+	for (int i = 0; i < 250; i++)
+	{
+		for(uint8_t j = 0; j < 8; j++)
+		{
+			HC595_Shift(data[j]);
+		}
+	}
+}
+
+/*************************************************************************
+							LED Matrix
+*************************************************************************/
+void LED_Matrix(uint16_t data[])
+{	
+	//accelerometer_logic(data);
+	cursor_counter++;
+	exit_counter++;
+	for (int i = 0; i < 80; i++)
+	{	
+		for(uint8_t j = 0; j < 8; j++)
+		{
+			HC595_Shift(data[j]);		
+			//_delay_ms(1000);
+		}
+	}
+	if (exit_counter == 1)
+	{
+		data[7] ^= (1 << 7);
+		exit_counter = 0;
+	}
+	if (cursor_counter == 2)
+	{
+		accelerometer_logic(data);
+		data[currRow] ^= (1 << currCol);
+		cursor_counter = 0;
+	}
+}
+
+/*************************************************************************
+							ISR Service
+*************************************************************************/
+ISR(PCINT2_vect)
+{   
+	// Get a random number (0 to 255)
+	int j = 0;
+	int randNumber;		
+	randNumber = rand() % 10; 								
+	if (BIT_IS_CLEAR(PIND, PD3))
+	{	
+		//Greet_Matrix(HELLO);
+		Greet_Matrix(THREE);
+		Greet_Matrix(TWO);
+		Greet_Matrix(ONE);
+		
+		while(1)
+		{
+			if(currRow == 7 && currCol == 7)
+			{
+				for (j = 0; j < 2; ++j)
+				{
+					currRow = 0;
+					currCol = 0;
+					Greet_Matrix(SMILE);
+				}
+				return;
+			}
+			switch (randNumber)
+			{
+				case(0):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE0);
+						break;
+					}
+				case(1):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE1);
+						break;
+					}
+				case(2):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE2);
+						break;
+					}
+				case(3):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE3);
+						break;
+					}
+				case(4):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE4);
+						break;
+					}
+				case(5):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE5);
+						break;
+					}
+				case(6):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE6);
+						break;
+					}
+				case(7):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE7);
+						break;
+					}
+				case(8):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE8);
+						break;
+					}
+				case(9):
+					{
+						//LED_Matrix(TEMP);
+						LED_Matrix(MAZE9);
+						break;
+					}
+			}
+		}
+	}
+	
+	Greet_Matrix(CLEAR);
+}
+
 
 //set up inputs and Analog-Digital converter
 int init_ADC()
@@ -184,422 +511,232 @@ int init_ADC()
 	//disable digital input for ADC0, 1, 2, 3, 4, 5
 	//DIDR0|=0x3F;
 	// set Vref = AVCC
+	//ADMUX = 0x60;
+	ADMUX &= 0b01111111;
 	ADMUX |= (1<<REFS0);
+	//ADMUX |= (1<<ADLAR);
 	// set resolution to 10 bits
-	ADMUX &= (0<<ADLAR);
-	//set prescalar to 128 and enable ADC
-	ADCSRA |= (1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0)|(1<<ADEN);
+	//ADMUX &= (0<<ADLAR);
+	//set prescalar to 16 and enable ADC
+	ADCSRA = 0x80;
+	ADCSRA |= (1<<ADPS2)|(1<<ADEN);
+	//ADCSRA &= ~(1<<ADPS1) & ~(1<<ADPS0);
 	//set to free running
-	//ADCSRA &=  (1<<ADTS2) & (1<<ADTS1) & (1<<ADTS0);
+	ADCSRB &=  0xF8;
+	//ADMUX |= (1 << REFS0) | (1<< REFS1);
 	
 	return 1;
 }
 
 
-//takes average of 10 measurements returns 1 or -1 if abs(x) is smallest, 2 or -2 if abs(y) is smallest, 3 or -3 if abs(z) is smallest
-int getOrientation()
-{
-  int gemiddelde = 10;
-  int x = 0;
-  int y = 0;
-  int z = 0;
-  int xAbs = 0;
-  int yAbs = 0;
-  int zAbs = 0;
-  for(int i = 0; i<gemiddelde ; i++)              //We take in this case 10 measurements to average the error a little bit
-  {
-    x = x+getXAccel();
-    y = y+getYAccel();
-    z = z+getZAccel();
-  }
-  x= x/gemiddelde;
-  y = y/gemiddelde;
-  z = z/gemiddelde;
-  //xAbs = abs(100-abs(x));
-  //yAbs = abs(100-abs(y));
-  //zAbs = abs(100-abs(z));
 
-  /*Serial.print(x);
-  Serial.print('\t');
-  Serial.print(y);*/
 
-  xAbs = abs(x);
-  yAbs = abs(y);
-  zAbs = abs(z);
-  if (xAbs<yAbs&&xAbs<zAbs)
-  {
-    if (x>0)
-    {
-      return 1;
-    }
-    return -1;
-  }
-  if (yAbs<xAbs&&yAbs<zAbs)
-  {
-    if (y>0)
-    {
-      return 2;
-    }
-    return -2;
-  }
-  if (zAbs<xAbs&&zAbs<yAbs)
-  {
-    if (z>0)
-    {
-      return 3;
-    }
-    return -3;
-  }
-  return 0;
-}
-
-//takes _average number of x measurements mapped to G range
-int getXAccel()
-{
-  int sum = 0;
-  for (int i = 0;i<_average;i++)
-  {
-    sum = sum + _mapMMA7361G(getXRaw());
-  }
-  return sum/_average;
-}
-
-//takes _average number of y measurements mapped to G range
-int getYAccel()
-{
-  int sum = 0;
-  for (int i = 0;i<_average;i++)
-  {
-    sum = sum + _mapMMA7361G(getYRaw());
-  }
-  return sum/_average;
-}
-
-//takes _average number of y measurements mapped to G range
-int getZAccel()
-{
-  int sum = 0;
-  for (int i = 0;i<_average;i++)
-  {
-    sum = sum + _mapMMA7361G(getZRaw());
-  }
-  return sum/_average;
-}
-
-//map to voltage scale (0 = 0V,  3300 = 3.3 V)
-int _mapMMA7361V(int value)
-{
-  
-    return ATmap(value,0,1024,0,3300);
-  
-}
 
 //raw accelerometer reading. adds offsets calculated in calibration
 int getXRaw()
 {
-	int x;
+	int low = 0;
+	int high = 0;
 	//set ADC channel to x channel
-	ADMUX &= 0xF0;
+	ADMUX &= 0xE0;
 	ADMUX |= X_CHANNEL;
 	
 	//start conversion
 	ADCSRA |= (1<<ADSC);
 	
 	//poll for done
-	while(!(ADCSRA & (1<<ADSC)));
+	while(!(ADCSRA & (1<<ADIF)));
 	
+	
+	ADCSRA|=(1<<ADIF);
 	//read ADC
-	x = ADC;
-	
-	return x + offsets[0]+2;
+	low |= ADCL;
+	high |= ADCH;
+	//x |= ADCL;
+	//x |= (ADCH << 8);
+	//_delay_us(100);
+	return (high * 256) + low; //+ offsets[0]+2;
+	//return ADC;
 }
-
 
 //raw accelerometer reading. adds offsets calculated in calibration
 int getYRaw()
 {
-	int y;
+	int high = 0;
+	int low = 0;
+	//int y = 0;
 	//set ADC channel to x channel
-	ADMUX &= 0xF0;
+	ADMUX &= 0xE0;
 	ADMUX |= Y_CHANNEL;
 	
 	//start conversion
 	ADCSRA |= (1<<ADSC);
 	
 	//poll for done
-	while(!(ADCSRA & (1<<ADSC)));
-	
+	while(!(ADCSRA & (1<<ADIF)));
+	ADCSRA|=(1<<ADIF);
 	//read ADC
-	y = ADC;
+	low |= ADCL;
+	high |= ADCH;
 	
-	return y + offsets[1]+2;
+	//_delay_us(100);
+	return (high * 256) + low;
+	//return ADC;
 }
 
 
 //raw accelerometer reading. adds offsets calculated in calibration
-int getZRaw()
+/*int getZRaw()
 {
-	int z;
+	int z = 0;
 	//set ADC channel to z channel
-	ADMUX &= 0xF0;
+	ADMUX &= 0xE0;
 	ADMUX |= Z_CHANNEL;
 	
 	//start conversion
 	ADCSRA |= (1<<ADSC);
 	
 	//poll for done
-	while(!(ADCSRA & (1<<ADSC)));
-	
+	while(!(ADCSRA & (1<<ADIF)));
+	ADCSRA|=(1<<ADIF);
 	//read ADC
-	z = ADC;
+	//z |= ADCL;
+	z |= ADCH;
 	
-	return z + offsets[2];
+	
+	//_delay_us(100);
+	
+	//return z;
+	return ADC;
 }
-
-
-//set raw values in scale of voltage
-int getXVolt()
-{
-  return _mapMMA7361V(getXRaw());
-}
-
-//set raw values in scale of voltage
-int getYVolt()
-{
-  return _mapMMA7361V(getYRaw());
-}
-
-//set raw values in scale of voltage
-int getZVolt()
-{
-  return _mapMMA7361V(getZRaw());
-}
-
-//sets offsets[] array to center raw values
-void setOffSets(int xOffSet, int yOffSet, int zOffSet)
-{
-    offsets[0]= ATmap(xOffSet,0,5000,0,1024);
-    offsets[1]= ATmap(yOffSet,0,5000,0,1024);
-    offsets[2]= ATmap(zOffSet,0,5000,0,1024);
-}
-
-//maps to a g scale
-int _mapMMA7361G(int value)
-{
-  return ATmap(value,0,1024,-260,419);
-}
-
-//set threshold of ~10% from center
-int make_xy(int to_make)
-{
-  if (to_make < 1450) //if to_make less than center - 200, return distance from center 
-    return (to_make - 1650);
-
-  if(to_make > 1850) // if to_make more than center + 200, return distance from center
-    return (to_make - 1650);
-
-  return 0;	//else return 0
-
-    
-}
+*/
 
 //get average orientation from 10 readings then put through
 //threshold of 10% from center
+//returns -1 = left
+// 1 = right
+// -2 = down
+// 2 = up
 int make_orientation()
 {
-  int i;
-  int gemiddelde = 10;
-  int x = 0;
-  int y = 0;
-  int z = 0;
-  int xAbs = 0;
-  int yAbs = 0;
-  int zAbs = 0;
-  for(i = 0; i<gemiddelde ; i++)              //We take in this case 10 measurements to average the error a little bit
-  {
-    x = x+getXVolt();
-    y = y+getYVolt();
-    z = z+getZVolt();
-  }
-  x= x/gemiddelde;
-  y = y/gemiddelde;
-  z = z/gemiddelde;
-
-  /*Serial.print(x);
-  Serial.print('\t');
-  Serial.println(y);*/
-
-  x= make_xy(x);
-  y = make_xy(y);
-  z = make_xy(z);
-  //xAbs = abs(100-abs(x));
-  //yAbs = abs(100-abs(y));
-  //zAbs = abs(100-abs(z));
-
-  xAbs = abs(x);
-  yAbs = abs(y);
-  zAbs = abs(z);
-
-  /*Serial.print(xAbs);
-  Serial.print('\t');
-  Serial.println(yAbs);
-  Serial.print(x);
-  Serial.print('\t');
-  Serial.println(y);
-  */
-  
-  if(x>0)
-	return 1;
-	
-	else return -1;
-  /*if (xAbs > yAbs)
-  {
-    if (x>0)
-    {
-      return 1;
-    }
-    return -1;
-  }
-  if (yAbs > xAbs)
-  {
-    if (y>0)
-    {
-      return 2;
-    }
-    return -2;
-  }*/
-  
-  /*if (zAbs<xAbs&&zAbs<yAbs)
-  {
-    if (z>0)
-    {
-      return 3;
-    }
-    return -3;
-  }*/
-  return 0;
+	int gemiddelde = 10;
+	int x = 0;
+	int y = 0;
+	int xAbs;
+	int yAbs;
+//	int z = 0;
+	for(int i = 0; i<gemiddelde ; i++)              //We take in this case 10 measurements to average the error a little bit
+	{
+		x = x+getXRaw();
+		y = y+getYRaw();
+//		z = z+getZRaw();
+	}
+	x= x/gemiddelde;
+	y = y/gemiddelde;
+//	z = z/gemiddelde;
+	xAbs = abs(x -512);
+	yAbs = abs(y -512);
+	if (xAbs> yAbs)
+	{
+		if (x < 400)
+		{
+		
+			return 3;  // up
+		}
+		else if(x>624)	
+		{
+			return 4;	// down
+		}
+		else
+		{
+			x = 0;
+			y = 0;
+			return 0;
+		}
+	}
+	else
+	{	
+		 if (y < 400)
+		{
+			x = 0;
+			y = 0;
+			return 1;	// right
+		}
+		else if(y > 624)
+		{
+			x = 0;
+			y = 0;
+			return 2;		// left
+		}
+		else
+		{
+			x = 0;
+			y = 0;
+			return 0;
+		}
+	}
 }
 
 
 
-int main()
+int main(void)
 {
-	int direction;
-	int x = 0;
-	int y = 0;
-	int z = 0;
+	/*********** Test Code ************
+	HC595_DDR |= (1<<HC595_IN);
 	
-	//initialize button input at PB1
-	DDRB &= 0xFE; //(0 << DDB0);
-	//DDRD &= 0xF8;
-	
-	//set pullup resistor
-	//PORTB |= (1 << PORTB1);
-	PORTB |= (1 << PORTB0);
-	
-	//initialize accelerometer inputs
+	while (1)
+	{
+		HC595_PORT |= (1<<HC595_IN);
+		_delay_ms(3000);
+		HC595_PORT &= ~(1<<HC595_IN);
+		_delay_ms(3000);
+	}
+	***********************************/
+	//entryPoint.x = 0;
+	//entryPoint.y = 7;
+	//exitPoint.x = 7;
+	//exitPoint.y = 0;
+							
+	Button_Init();
+	HC595_Init();	
 	init_ADC();
-	
-	//do a calibrate
-	calibrate();
-	
-	//initialize outputs
-	DDRD |= (1 << DDD0) | (1 << DDD1) | (1 << DDD2) | (1 << DDD3) | (1 << DDD6) | (1 << DDD5);
-	DDRB |= (1 << DDB7) | (1 << DDB6);
-	 
-	PORTD |= 32;
-	//PIND |= (1<<PIND0);
 
+	//int direction;
+	//HC595_Shift(0b0001000011101111);
+	
+	//_delay_ms(100);
+	
 	while(1)
 	{
+		/*direction = make_orientation();
 		
-		
-		
-		//loop until button press
-		if(1)
+		switch (direction)
 		{
-			//100 us delay
-			_delay_us(100);
-			
-			//get direction from accelerometer
-			direction = make_orientation();
-			
-			PORTB |= (1 << PINB6);
-			PORTB &= !(1 << PINB7);
-			PORTD &= !(1 << PIND6);
-			PORTD &= !(1 << PIND5);
-			
-			_delay_us(1000);
-			
-			PORTB &= !(1 << PINB6);
-			PORTB |= (1 << PINB7);
-			PORTD &= !(1 << PIND6);
-			PORTD &= !(1 << PIND5);
-			
-			_delay_us(1000);
-			
-			PORTB &= !(1 << PINB6);
-			PORTB &= !(1 << PINB7);
-			PORTD |= (1 << PIND6);
-			PORTD &= !(1 << PIND5);
-			
-			_delay_us(1000);
-			
-			PORTB &= !(1 << PINB6);
-			PORTB &= !(1 << PINB7);
-			PORTD &= !(1 << PIND6);
-			PORTD |= (1 << PIND5);
-			
-			_delay_us(1000);
-			
-			
-			/*
-			//activate indicated lights, deactivate other lights
-			switch(direction) {
-				//up
-				case(-1): {
-					PINB |= (1 << PINB6);
-					PINB &= (0 << PINB7);
-					PIND &= (0 << PIND6);
-					PIND &= (0 << PIND5);
-					break;
-				}
-				//down
-				case(1): {
-					PINB |= (1 << PINB7);
-					PINB &= (0 << PINB6);
-					PIND &= (0 << PIND6);
-					PIND &= (0 << PIND5);
-					break;
-				}
-				//right
-				case(-2): {
-					PIND |= (1 << PIND6);
-					PIND &= (0 << PIND5);
-					PINB &= (0 << PINB7);
-					PINB &= (0 << PINB6);
-					break;
-				}
-				//left
-				case(2): {
-					PIND |= (1 << PIND5);
-					PIND &= (0 << PIND6);
-					PINB &= (0 << PINB6);
-					PINB &= (0 << PINB7);
-					break;
-				}
-				//none. turn all off
-				default: {
-					PIND &= (0 << PIND5);
-					PIND &= (0 << PIND6);
-					PINB &= (0 << PINB6);
-					PINB &= (0 << PINB7);
-					break;
-				}
-			}*/
+			case 1: {
+				HC595_Shift(0b0010000011101111);
+				break;
+			}
+			case 2: {
+				HC595_Shift(0b0000010011101111);
+				break;
+			}
+			case 3: {
+				HC595_Shift(0b0001000011011111);
+				break;
+			}
+			case 4: {
+				HC595_Shift(0b0001000011110111);
+				break;
+			}		
+			default: {
+				HC595_Shift(0b0001000011101111);
+				break;
+			}
 		}
+		_delay_ms(100);*/
+		
+		
+		Greet_Matrix(HELLO);
+		_delay_ms(1);
 	}
-
-	return 0;
-	
 }
