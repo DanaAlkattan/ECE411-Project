@@ -24,7 +24,6 @@
 #define Y_CHANNEL 0x44
 #define Z_CHANNEL 0x43
 
-//int direction = 0;
 int currRow = 0;
 int currCol = 0;
 
@@ -40,7 +39,7 @@ int init_ADC();
 /*************************************************************************
 						Greeting & 10 Mazes
 *************************************************************************/
-uint16_t TEMP[8] = {0b1000000011100111, // for testing
+/*uint16_t TEMP[8] = {0b1000000011100111, // for testing
 					0b0100000011111111,
 					0b0010000011111111,
 					0b0001000001111110,
@@ -48,7 +47,7 @@ uint16_t TEMP[8] = {0b1000000011100111, // for testing
 					0b0000010011111111,
 					0b0000001011111111,
 					0b0000000111111111};
-					
+*/				
 uint16_t SMILE[8] = {	0b1000000000111100,
 						0b0100000001111110,
 						0b0010000011011011,
@@ -290,13 +289,13 @@ void accelerometer_logic(uint16_t data[])
 	direction = make_orientation();
 	switch(direction)
 	{
-		case(2): 			// tilt right (down)
+		case(2): 			// tilt right
 			if(currCol == 7)
 			{
 				break;
 			}else
 			{
-				if((data[currRow] & (1 << (currCol + 1))) == (1 << (currCol+1)))// the right bit is = 0, turn on
+				if((data[currRow] & (1 << (currCol + 1))) == (1 << (currCol+1)) || ((currRow == 7) && (currCol == 6)))// the right bit is = 0, turn on
 				{
 					data[currRow] |= (1 << (currCol));
 					currCol++;
@@ -338,7 +337,7 @@ void accelerometer_logic(uint16_t data[])
 				break;
 			}else
 			{
-				if((data[currRow+1] & (1 << currCol)) == (1 << currCol)) // the down bit is = 0, turn on
+				if((data[currRow+1] & (1 << currCol)) == (1 << currCol) || (currRow == 6 && currCol == 7)) // the down bit is = 0, turn on
 				{
 					data[currRow] |= (1 << currCol);
 					currRow++;
@@ -386,7 +385,7 @@ void LED_Matrix(uint16_t data[])
 	//accelerometer_logic(data);
 	cursor_counter++;
 	exit_counter++;
-	for (int i = 0; i < 80; i++)
+	for (int i = 0; i < 100; i++)
 	{	
 		for(uint8_t j = 0; j < 8; j++)
 		{
@@ -412,13 +411,12 @@ void LED_Matrix(uint16_t data[])
 *************************************************************************/
 ISR(PCINT2_vect)
 {   
-	// Get a random number (0 to 255)
+	// Get a random number (0 to 10)
 	int j = 0;
 	int randNumber;		
-	randNumber = rand() % 10; 								
+	randNumber = rand() % 11; 								
 	if (BIT_IS_CLEAR(PIND, PD3))
 	{	
-		//Greet_Matrix(HELLO);
 		Greet_Matrix(THREE);
 		Greet_Matrix(TWO);
 		Greet_Matrix(ONE);
@@ -497,13 +495,18 @@ ISR(PCINT2_vect)
 						LED_Matrix(MAZE9);
 						break;
 					}
+				case(10):
+				{
+					//LED_Matrix(TEMP);
+					LED_Matrix(MAZE10);
+										break;
+				}
 			}
 		}
 	}
 	
 	Greet_Matrix(CLEAR);
 }
-
 
 //set up inputs and Analog-Digital converter
 int init_ADC()
@@ -528,10 +531,6 @@ int init_ADC()
 	return 1;
 }
 
-
-
-
-
 //raw accelerometer reading. adds offsets calculated in calibration
 int getXRaw()
 {
@@ -546,8 +545,7 @@ int getXRaw()
 	
 	//poll for done
 	while(!(ADCSRA & (1<<ADIF)));
-	
-	
+		
 	ADCSRA|=(1<<ADIF);
 	//read ADC
 	low |= ADCL;
@@ -584,7 +582,6 @@ int getYRaw()
 	//return ADC;
 }
 
-
 //raw accelerometer reading. adds offsets calculated in calibration
 /*int getZRaw()
 {
@@ -611,12 +608,6 @@ int getYRaw()
 }
 */
 
-//get average orientation from 10 readings then put through
-//threshold of 10% from center
-//returns -1 = left
-// 1 = right
-// -2 = down
-// 2 = up
 int make_orientation()
 {
 	int gemiddelde = 10;
@@ -677,66 +668,15 @@ int make_orientation()
 	}
 }
 
-
-
 int main(void)
-{
-	/*********** Test Code ************
-	HC595_DDR |= (1<<HC595_IN);
-	
-	while (1)
-	{
-		HC595_PORT |= (1<<HC595_IN);
-		_delay_ms(3000);
-		HC595_PORT &= ~(1<<HC595_IN);
-		_delay_ms(3000);
-	}
-	***********************************/
-	//entryPoint.x = 0;
-	//entryPoint.y = 7;
-	//exitPoint.x = 7;
-	//exitPoint.y = 0;
-							
+{							
 	Button_Init();
 	HC595_Init();	
 	init_ADC();
-
-	//int direction;
-	//HC595_Shift(0b0001000011101111);
-	
-	//_delay_ms(100);
 	
 	while(1)
-	{
-		/*direction = make_orientation();
-		
-		switch (direction)
-		{
-			case 1: {
-				HC595_Shift(0b0010000011101111);
-				break;
-			}
-			case 2: {
-				HC595_Shift(0b0000010011101111);
-				break;
-			}
-			case 3: {
-				HC595_Shift(0b0001000011011111);
-				break;
-			}
-			case 4: {
-				HC595_Shift(0b0001000011110111);
-				break;
-			}		
-			default: {
-				HC595_Shift(0b0001000011101111);
-				break;
-			}
-		}
-		_delay_ms(100);*/
-		
-		
+	{		
 		Greet_Matrix(HELLO);
-		_delay_ms(1);
+		//_delay_ms(1);
 	}
 }
